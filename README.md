@@ -34,73 +34,56 @@ WARNINGs:
 
 4)	Warning: Differently from the HM-10 Bluetooth Module, the HC-05 Module commands have to end with both NL and CR ("\r\n").
 
-5)	The proper way to manage the connection to the ELM327 Bluetooth Module:
+5)	To be able to send AT commands to the HC-05 Module, it has to be configured into "AT Mode" by connecting the KEY pin to 3,3V When power is connected to the Module, and the default baund rate has to be set to 38400
+-	It does not need to be set back to "Com Mode"  KEY pin LOW (0V) to communicate to the ELM327. One can just leave it in AT Mode with baud rate 38400 forever!!!
+
+6)	The proper way to manage the connection to the ELM327 Bluetooth Module:
 
  
--	Enter HC-05 AT mode		// the KEY pin has to be set to HIGH (3,3V) and the default baund rate to 38400
--	delay(500);
+-	Enter HC-05 AT mode		// the KEY pin has to be set to HIGH (3,3V) When power is connected to the Module and the default baund rate to 38400
 -	AT+RESET				//send to Reset HC-05
 -	delay(1000);
--	AT+ROLE=1               //send ROLE=1, set role to master
--	AT+CMODE=0              //send CMODE=0, set connection mode to specific address
--	AT+BIND=1122,33,DDEEFF  //send BIND=??, bind HC-05 to OBD bluetooth address ("1122,33,DDEEFF" is the ELM327 MAC address)
+-	AT+ROLE=1               //send ROLE=1, set role to master || Role = 1 will stay even if power is turned off
+-	AT+CMODE=0              //send CMODE=0, set connection mode to specific address || CMODE = 0 will stay even if power is turned off
 -	AT+INIT                 //send INIT, cannot connect without this cmd. Initialize the SPP lib
 -	delay(1000); 
--	AT+PAIR=1122,33,DDEEFF,20 //send PAIR, pair with OBD address - Try it for 20 secconds
--	delay(1000);  
--	LINK=1122,33,DDEEFF     //send LINK, link with OBD address
--	delay(1000); 
--	Enter HC-05 comunication mode - Basically, KEY pin is set to LOW to allow comands to be sent to the ELM327. Keep baund rate set to 38400
--	delay(500);
+-	AT+BIND=8818,56,6898EB  //send BIND=??, bind HC-05 to OBD bluetooth address ("1122,33,DDEEFF" is the ELM327 MAC address)
+-	delay(3000); 
+-	AT+PAIR=8818,56,6898EB,10 //send PAIR, pair with OBD address - Try it for 20 secconds
+-	delay(11000);  
+-	AT+LINK=8818,56,6898EB     //send LINK, link with OBD address
+-	delay(3000); 
 
--	** Begin to send and receive commands to the ELM327 Module **
+-	** Now the HC-05 is LINKED to the ELM327 **		// But ELM327 will still have difficulties to find the right protocol to comunicate to the OBD2
+-	** The default protocol is set to AUTO... But is sometimes do not connect to the car... And olny works if engine is turned ON.. **
+-	** To go arround this problem, we should force ELM327 to use the car specific Protocol **
+-	** In my case it is the nr. 5: ISO 14230-4 (KWP FAST), so we used the command ATSP5 **
+
+-	ATSP5					// Set ELM327 to use the Protocol nr. 5: ISO 14230-4 (KWP FAST) for a Mitsubishi Pagero TR4 (2010) 
+
+-	** Then... Begin to send and receive commands to the OBD2 Interface **
 
 
-6)	Exemple of a communication attempt via terminal that acctually worked (sent commands and ELM327 reply): 
+7)	Exemple of a communication attempt via terminal that acctually worked (sent commands and HC-05/ELM327/OBD2 reply): 
 
--	AT+ROLE1		// Master Mode
+-	AT+INIT		Reply: OK
 
-OK
--	AT+INIT			// Init SPP library
+-	AT+INQ		Reply: +INQ:8818:56:6898EB,1F00,7FFF		OK
 
-OK
--	AT+INQ			// Discover other Bluetooth MAC addresses
+-	AT+BIND=8818,56,6898EB		Reply: OK
 
-+INQ:8818:56:6898EB,1F00,7FFF
-OK
--	AT+LINK=8818,56,6898EB		// Connect to ELM327 Bluetooth
+-	AT+PAIR=8818,56,6898EB,20		Reply: OK
 
-OK
-OK
--	0111			// Commands sent to ELM327 OBD2 Module
+-	AT+LINK=8818,56,6898EB		Reply: OK
 
-SEARCHING...
-UNABLE TO CONNECT	// Did not work ...
+-	ATSP5		Reply: coacsATSP5		OK
 
--	AT+BIND=8818,56,6898EB	// Do not know why it is important... Just tryied...
-
-AT+BIND=8818,56,6898EB
-?
-
--	0111		// And finnaly got a response!!!
-
-0111
-SEARCHING...
-41 11 00 
-
--	0111
-
-0111
-41 11 1A 
-
--	011C
-
-011C
-41 1C 06 
-
--	011D
-
-011D
-7F 01 12 
-
+-	0111		Reply: 0111		BUS INIT: OK	41 11 00
+-	0111		Reply: 0111		41 11 00
+-	010C		Reply: 010C		41 0C 00 00
+-	010D		Reply: 010D		41 0D 00 
+-	0111		Reply: 0111		41 11 00 
+-	0111		Reply: 0111		41 11 27 
+-	010C		Reply: 010C		41 0C 0C 10 
+-	010C		Reply: 010C		41 0C 0C 18 
 
