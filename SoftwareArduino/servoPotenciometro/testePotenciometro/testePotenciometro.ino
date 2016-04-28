@@ -19,7 +19,7 @@
   int toleranciaki = 20;
   int soma = 0;
   int targetAcel = 100;
-  int servo = 100;
+  float servo = 100;
   int potpin = 0;
   
   void setup() {
@@ -52,7 +52,7 @@
       // Converte o valor pra ser usado no servo (valores entre 0 e 180) 
       throttle = map(throttle, 0, 1023, 0, 179);     
 
-      int servo = (int)PID();
+      servo = servo + (int)PID();
       
       if ((throttle > (targetAcel+toleranciaki)) || (throttle < (targetAcel-toleranciaki))) {
           soma = 0;
@@ -63,7 +63,7 @@
       if (soma < -10) 
           soma = -10;
                      
-
+/*
       //if (throttle != -1) {
       //    LoopDelay = 250;
       if (throttle > (targetAcel+tolerancia))
@@ -72,11 +72,11 @@
           if (servo < 180) servo=servo+SET;
       //}
       //else LoopDelay = 300;
-
+*/
       // Move o eixo do servo, de acordo com o angulo
-      myServo.write(servo);                  
+      myServo.write((int)servo);                  
       // Aguarda o servo atingir a posição
-      delay(30);  
+      delay(50);  
   
 // Debugging...  
 
@@ -95,15 +95,14 @@
 
 
   float PID() {
-      float error, integral, proportional, derivative, dt;
+      float integral, proportional, derivative, dt;
+      int error;
       
       dt = (millis() - ontem)/1000;
       ontem  = millis();
       
       error = targetAcel-throttle;
-      Serial.print("   erro: ");
-      Serial.print(error);
-      Serial.println();
+      
       soma = soma + (error * dt);
       
       proportional = error * kc;  
@@ -112,7 +111,17 @@
       
       lastError = error;
       
-      return proportional + integral + derivative;
+      Serial.print("   erro: ");
+      Serial.print(error);
+      Serial.print("   soma: ");
+      Serial.print(soma);
+      Serial.print("   propor: ");
+      Serial.print(proportional);
+      
+      
+      Serial.println();
+      
+      return proportional; //+ integral + derivative;
   }
  
   void resposta() {
