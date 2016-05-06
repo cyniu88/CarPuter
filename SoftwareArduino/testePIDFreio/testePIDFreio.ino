@@ -1,3 +1,4 @@
+// https://en.wikipedia.org/wiki/PID_controller
 // Pot=175  ==>  Servo=147
 // Pot=060  ==>  Servo=20
 
@@ -9,15 +10,15 @@
   
   float lastProcess = 0;
   float lastError = 100000;
-  float kp = 2.50, ki = 0.0, kd = 0.04;
+  float kp = 0.50, ki = 0.0, kd = 0.0, kf = 0.5;
   float servo = 55, pid;
   int targetAcel = 70; 
   int throttle = 0, throttleMedia = 0;
-  int pwm = 0;
+  int pwm = 0, FlagFreio = 0;
   int tol = 1;
   int tolKi = 50, sumMax = 10;
-  float Delta = 0, sum = 0;
-  int taxaDelay = 5;
+  float Freio = 0, Delta = 0, sum = 0;
+  int taxaDelay = 1;
   
   void setup() {
       // Inicializa as entidades seriais com a mesma velocidade de comunicação
@@ -102,12 +103,13 @@
       Serial.print("\t");
       Serial.print(Delta);
       Serial.print("\t");
+      Serial.print(Freio);
       Serial.println();
   }
 
 
   float PID() {
-      float P, I, D, myPID, dt, error;
+      float P, I, D, F, myPID, dt, error;
     
       // Cáculo do erro associado as medições
       error = targetAcel - throttle;
@@ -128,14 +130,24 @@
         D = kd * Delta;
       }
       else 
-        D = 0;
+        D = Delta = 0;
+      
+      if(error <= 0) FlagFreio =1;
+      if(error > 20) FlagFreio =0;
+      
+      if(FlagFreio == 0)
+          Freio = Delta/error;
+      else
+         Freio = 0;
+         
+      F = kf * Freio;
       
       // Atualização dos valores do último erro e tempo
       lastError = error;
       lastProcess  = millis();
 
       // Resultado do PID
-      myPID = P + I + D;
+      myPID = P + I + D + F;
       
       //Serial.print(myPID);
       //Serial.println();
