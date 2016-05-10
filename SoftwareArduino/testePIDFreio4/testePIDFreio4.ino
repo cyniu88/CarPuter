@@ -6,22 +6,21 @@
   #include <SoftwareSerial.h>
   
   #define LASTERRORINI 100000
-  //#define LIMTOP -10 bom subida
-  //#define LIMDOWN 15
   #define LIMTOP -10
   #define LIMDOWN 5
-  #define SUMMAX 5
-  #define TOL 2
-  #define TOLKI 15
+  #define LIMDELTA 100
+  #define SUMMAX 10
+  #define TOL 1
+  #define TOLKI 25
 
   float lastProcess = 0;
   float lastError = LASTERRORINI;
-  float kp = 0.1, ki = 0.001, kd = 0.003, kb = 5;
-  float servo = 55;
+  float kp = 0.06, ki = 0.003, kd = 0.0, kb = 0.3;
+  float servo = 55, pid;
   float breaker = 0, delta = 0, sum = 0;
   int targetAcel = 70, lasttargetAcel = 70, pwm = 0; 
-  int throttle = 0, throttleMedia = 0;
-  boolean flagBreak = true;
+  int lastThrottle = 0, throttle = 0, throttleMedia = 0;
+  boolean flagBreak = true, subindo = true;
   
   Servo myServo;  // Cria a entidade que controla o servo
   
@@ -65,7 +64,8 @@
       throttle = throttleMedia / 100.0;
 
       // Soma o valor do ângulo atual do servo com a correção do PID
-      servo += PID();
+      pid = PID();
+      servo += pid;
 
       // Define os limites de rotação do servo
       if (servo > 167)
@@ -94,7 +94,9 @@
 // Debugging...  
       Serial.print(targetAcel);
       Serial.print("\t");
-      Serial.print(throttle);
+      Serial.print(throttle);      
+      Serial.print("\t");
+      Serial.print(pid);
       Serial.print("\t");
       Serial.print(pwm);
       Serial.print("\t");
@@ -134,19 +136,26 @@
         D = delta = 0;
 
       // Define que o freio não deve ser usado no caso de os sinais da última leitura e da atual forem diferentes(quando a curva muda de sinal), ou se a atual for 0(chegou no setpoint)
-      if (((error > 0) && (lastError < 0)) || ((error < 0) && (lastError > 0)) || (error == 0))
+      if (((error > 0) && (lastError < 0)) || ((error < 0) && (lastError > 0)) || (error == 0) || (abs(delta) < LIMDELTA))
         flagBreak = false;
 
       // Define o uso do freio caso o setpoint mudar
       if ((targetAcel != lasttargetAcel))
         flagBreak = true;
 
+      if ((targetAcel - lasttargetAcel) > 0)
+        subindo = true;
+      if ((targetAcel - lasttargetAcel) < 0)
+        subindo = false;
+
+
       // Atualiza o último setpoint
       lasttargetAcel = targetAcel;
 
       // Caso o freio esteja definido pra ser usado e o setpoint não tenha sido alcançado
       if ((flagBreak) && (error != 0))
-        breaker = delta / (error * error);
+        if (subindo) breaker = -1 * abs(delta / (error * error));
+        else breaker = abs(delta / (error * error));
       else
         breaker = 0;
 
@@ -166,12 +175,11 @@
 
       // Resultado do PID
       myPID = P + I + D + B;
-
-      Serial.print(B);
+      
+      Serial.print(lasttargetAcel);
       Serial.print("\t");
-      Serial.print(error);
-      Serial.print("\t");
-      Serial.print(flagBreak);
+      Serial.print(subindo);
+      //Serial.print("\t");
       Serial.println();
       
       return myPID;
