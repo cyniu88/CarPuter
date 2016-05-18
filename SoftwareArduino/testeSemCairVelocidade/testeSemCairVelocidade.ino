@@ -15,7 +15,7 @@
   #define RESPONSETIME 100
   #define TOL 1
   #define FAIXA 5
-  #define TOLKI 25
+  #define TOLKI 15
 
   float lastProcess = 0;
   float lastError = LASTERRORINI;
@@ -69,6 +69,7 @@
                     
     // Verifica se o PID será usado
     if (flagLight) {
+      
       // Soma o valor do ângulo atual do servo com a correção do PID    
       if (flagAtivaPID)  
         servo += pid;      
@@ -94,7 +95,7 @@
 
     } else {
       // Define a velocidade
-      pwm = map(throttle, 70, 170, 35, 147);
+      pwm = throttle;//map(, 70, 170, 35, 147);
     }
 
     // Define a posição do ângulo do servo
@@ -148,8 +149,10 @@
       }
 
       if (flagLight) {
-        if (count > 1)
+        if (count > 1) 
           flagAtivaPID = true;
+        else
+          sum = 0;
         count++;
         if (count < RESPONSETIME) {
           if (throttle < 80) {
@@ -241,7 +244,7 @@
     lastProcess  = millis();
 
     // Resultado do PID
-    myPID = P;// + I + D + B;
+    myPID = P;// + I;// + D + B;
     
     return myPID;
   }
