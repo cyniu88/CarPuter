@@ -14,7 +14,7 @@
   #define INTERACTIONS 200
   #define RESPONSETIME 100
   #define TOL 1
-  #define FAIXA 10
+  #define FAIXA 5
   #define TOLKI 25
 
   float lastProcess = 0;
@@ -26,7 +26,7 @@
   int velocityFaixa = 100, velocity = 0, velocityMedia = 0;
   int lastSensor = 0, throttle = 0, throttleMedia = 0;
   int countInteractions = 0, count = 0;
-  boolean flagBreak = true, flagPID = false, goingUp = true, flagLight = false;
+  boolean flagBreak = true, flagPID = false, goingUp = true, flagLight = false, flagAtivaPID = false;
   
   Servo myServo;  // Cria a entidade que controla o servo
   
@@ -69,8 +69,9 @@
                     
     // Verifica se o PID será usado
     if (flagLight) {
-      // Soma o valor do ângulo atual do servo com a correção do PID      
-      servo += pid;
+      // Soma o valor do ângulo atual do servo com a correção do PID    
+      if (flagAtivaPID)  
+        servo += pid;      
 
       // Define os limites de rotação do servo
       if (servo > 167)
@@ -142,11 +143,13 @@
       if (countInteractions > INTERACTIONS) {
         digitalWrite(LED, HIGH);
         flagLight = true;
-        targetVelocity = velocityFaixa;
+        targetVelocity = velocity;
         servo = pwm;        
       }
 
       if (flagLight) {
+        if (count > 1)
+          flagAtivaPID = true;
         count++;
         if (count < RESPONSETIME) {
           if (throttle < 80) {
@@ -162,8 +165,9 @@
       }
     } else {
       //flagPid = true
-      if (throttle > 80) {
+      if (throttle > targetVelocity) {
         flagPID = false;
+        flagAtivaPID = false;
         digitalWrite(LED, LOW);
         flagLight = false;
         countInteractions = 0;
@@ -237,7 +241,7 @@
     lastProcess  = millis();
 
     // Resultado do PID
-    myPID = P + I + D + B;
+    myPID = P;// + I + D + B;
     
     return myPID;
   }
