@@ -1,7 +1,3 @@
-// https://en.wikipedia.org/wiki/PID_controller
-// Pot=175  ==>  Servo=147
-// Pot=060  ==>  Servo=20
-
   #include <Servo.h> 
   #include <SoftwareSerial.h>
   
@@ -15,7 +11,7 @@
   #define RESPONSETIME 100
   #define TOL 1
   #define FAIXA 5
-  #define TOLKI 25
+  #define TOLKI 15
 
   float lastProcess = 0;
   float lastError = LASTERRORINI;
@@ -54,8 +50,8 @@
         throttle = analogRead(A1);
         velocity = analogRead(A0);
         // Mapeia o valor do potenciômetro de 0-1023 para os ângulos de 0-180 
-        velocity = map(velocity, 0, 1023, 0, 179);
-        throttle = map(throttle, 0, 1023, 70, 170);
+        velocity = map(velocity, 240, 1000, 35, 179);
+        throttle = map(throttle, 0, 1023, 0, 179);
         velocityMedia += velocity;
         throttleMedia += throttle;
     }
@@ -69,6 +65,7 @@
                     
     // Verifica se o PID será usado
     if (flagLight) {
+      
       // Soma o valor do ângulo atual do servo com a correção do PID    
       if (flagAtivaPID)  
         servo += pid;      
@@ -94,7 +91,7 @@
 
     } else {
       // Define a velocidade
-      pwm = map(throttle, 70, 170, 35, 147);
+      pwm = throttle;
     }
 
     // Define a posição do ângulo do servo
@@ -148,11 +145,13 @@
       }
 
       if (flagLight) {
-        if (count > 1)
+        if (count > 5) 
           flagAtivaPID = true;
+        else
+          sum = 0;
         count++;
         if (count < RESPONSETIME) {
-          if (throttle < 80) {
+          if (throttle < 20) {
             flagPID = true;
             //servo = 40; //no caso do carro
           }            
