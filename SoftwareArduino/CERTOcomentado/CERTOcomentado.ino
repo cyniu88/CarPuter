@@ -48,7 +48,7 @@
   boolean goingUp = true; // Flag para definir se a velocidade está subindo ou descendo
   boolean flagLight = false; // Flag para acionar o LED
   boolean flagBreak = true; // Flag para acionar o uso do freio
-  boolean flagPID = false; // Flag para acionar o cálculo do PID  
+  boolean flagThrottleDown = false; // Flag para acionar o cálculo do PID  
   boolean flagActivatePID = false; // Flag para ativar o uso do PID
   
   Servo myServo;  // Cria a entidade que controla o servo
@@ -147,7 +147,7 @@
     Serial.print("\t");
     Serial.print(flagLight);
     Serial.print("\t");
-    Serial.print(flagPID);
+    Serial.print(flagThrottleDown);
     Serial.print("\t");
     Serial.print(flagActivatePID);
     Serial.println();
@@ -156,7 +156,7 @@
 
   void IA() {
     // Caso o cálculo do PID não esteja habillitado
-    if (!flagPID) {
+    if (!flagThrottleDown) {
       // Verifica se a velocidade está dentro de uma faixa constante
       if ((velocity < (velocityBand + FAIXA)) && (velocity > (velocityBand - FAIXA))) {
         // Incrementa as interações
@@ -189,7 +189,7 @@
         if (count < RESPONSETIME) {
           // Caso solte o pedal, ativa o cálculo do PID
           if (throttle < 20) {
-            flagPID = true;
+            flagThrottleDown = true;
             //servo = 40; ****no caso do carro, testar se vale a pena zerar o servo****
           }            
         } else {
@@ -206,7 +206,7 @@
       // Caso o cáculo do PID esteja habilitado e o motorista ultrapassar o target da velocidade
       if (throttle > targetVelocity) {
         // Desativa o cálculo e o uso do PID, apaga o LED, zera os contadores e redefine a faixa de velocidae
-        flagPID = false;
+        flagThrottleDown = false;
         flagActivatePID = false;
         digitalWrite(LED, LOW);
         flagLight = false;
