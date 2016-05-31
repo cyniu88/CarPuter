@@ -14,9 +14,9 @@ Servo myservo;  // create servo object to control a servo
 // twelve servo objects can be created on most boards
 
 int pos = 0, throttle = 0;    // variable to store the servo position
-int vetor1[180], vetor2[180];
-
+int vetor[180];
 void setup() {
+  Serial.begin(38400);
   myservo.attach(9);  // attaches the servo on pin 9 to the servo object
 }
 
@@ -27,30 +27,25 @@ void loop() {
     delay(50);                       // waits 15ms for the servo to reach the position
     throttle = analogRead(A0);
     throttle = map(throttle, 0, 1023, 0, 179);
-    vetor1[pos] = throttle;
+    vetor[pos] = throttle;
   }
-  
+  for (int i=40; i<150; i++) {
+    Serial.print(i);
+    Serial.print("\t");
+    Serial.print(vetor[i]);
+    Serial.println();
+  }
   for (pos = 150; pos > 40; pos -= 1) { // goes from 180 degrees to 0 degrees
     myservo.write(pos);              // tell servo to go to position in variable 'pos'
     delay(50);                       // waits 15ms for the servo to reach the position
     throttle = analogRead(A0);
     throttle = map(throttle, 0, 1023, 0, 179);
-    vetor2[pos] = throttle;
+    vetor[pos] = throttle;
   }
-  
-  delay(2000);
-  Serial.begin(38400);
-  for (int i=0; i<180; i++) {
+    for (int i=150; i>40; i--) {
     Serial.print(i);
     Serial.print("\t");
-    Serial.print(vetor1[i]);
-    Serial.println();
-  }  
-  for (int i=180; i>0; i--) {
-    Serial.print(i);
-    Serial.print("\t");
-    Serial.print(vetor2[i]);
+    Serial.print(vetor[i]);
     Serial.println();
   }
-  
 }

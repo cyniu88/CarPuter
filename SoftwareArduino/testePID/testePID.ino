@@ -9,7 +9,7 @@
   
   float lastProcess = 0;
   float lastError = 100000;
-  float kp = 2.50, ki = 0.0, kd = 0.04;
+  float kp = 1.50, ki = 0.0, kd = 0.0;
   float servo = 55, pid;
   int targetAcel = 70; 
   int throttle = 0, throttleMedia = 0;
