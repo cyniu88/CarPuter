@@ -1,4 +1,4 @@
-  #include <PWM.h>
+#include <PWM.h>
   #include <SoftwareSerial.h>
   
   #define LED 13
@@ -25,10 +25,17 @@
   int lastSensor = 0, throttle = 0, throttleMedia = 0;
   int countInteractions = 0, count = 0;
   boolean flagBreak = true, flagPID = false, goingUp = true, flagLight = false, flagAtivaPID = false;
-  int32_t frequency = 50;
+  int32_t frequency = 150;
   bool success = false;
   int pinServo = 9;
-  
+    SoftwareSerial mySerial(7, 8); // RX, TX
+
+  String check = "";
+  char c;
+  int flag = 0, sair = 0;
+ 
+ 
+  unsigned int throttle;
   
   void setup() {
     InitTimersSafe();
@@ -43,20 +50,125 @@
     Serial.flush();
     // Inicializa a váriavel de tempo
     lastProcess = millis(); 
+
+    while (1) {
+          if (mySerial.available())
+          {  
+              delay(100);  
+              //transfere o buffer do mySerial para a string check
+              while (mySerial.available() > 0)  
+              {
+                  c = mySerial.read();
+                  check += c;
+                  flag = 1;
+              }
+              if(flag==1) {
+                  Serial.print(check);
+                  Serial.write("\n");
+                  throttle_calc();
+                  check = "";
+                  flag = 0;
+              }
+          }
+      
+          if (Serial.available()) {  
+              delay(100);  
+              while (Serial.available() > 0)  //transfere o buffer do mySerial para a string check
+              {
+                  c = Serial.read();
+                  check += c;
+                  flag = 1;
+              }
+          
+              if(flag==1) {
+                  if (check == "sair") {
+                      mySerial.write("ATSP5\r\n");
+                      check = "";
+                      mySerial.flush();
+                      break;
+                  }
+                  
+                  if (check == "auto") {
+                      mySerial.flush();
+                      check = "AT+RESET\r\n";
+                      mySerial.print(check);
+                      check = "";
+                      delay(1000);
+                      resposta();
+                      
+                      check = "AT+ROLE=1\r\n";
+                      mySerial.print(check);
+                      check = "";
+                      delay(1000);
+                      resposta();
+                      
+                      check = "AT+CMODE=0\r\n";
+                      mySerial.print(check);
+                      check = "";
+                      delay(1000);
+                      resposta();
+                      
+                      check = "AT+INIT\r\n";
+                      mySerial.print(check);
+                      check = "";
+                      delay(1000);
+                      resposta();
+                      
+                      check = "AT+BIND=8818,56,6898EB\r\n";
+                      mySerial.print(check);
+                      check = "";
+                      delay(3000);
+                      resposta();
+                      
+                      check = "AT+PAIR=8818,56,6898EB,10\r\n";
+                      mySerial.print(check);
+                      check = "";
+                      delay(11000);
+                      resposta();
+                       
+                      check = "AT+LINK=8818,56,6898EB\r\n";
+                      mySerial.print(check);
+                      check = "";
+                      delay(11000);
+                      resposta();
+                      
+                      mySerial.write("ATSP5\r\n");                  
+                      delay(1000);
+                      resposta();
+                      
+                      mySerial.write("0111\r\n");
+                      resposta();
+                      
+                      check = "";
+                      mySerial.flush();
+                      break;
+                      
+                  }
+                  
+                  Serial.print(check);
+                  Serial.write("\n");
+                  mySerial.flush();
+                  check += "\r\n";
+                  mySerial.print(check);
+                  check = "";
+                  flag = 0;
+              }
+          }
+      }
   
   }
   
   void loop() {  
     if (success) {
     // Lê o valor do potenciômetro usando a média das leituras para evitar ruídos
-      velocityMedia = throttleMedia = 0;
+    /*  velocityMedia = throttleMedia = 0;
   
       for (int j = 0; j < 100; j++)  {
           throttle = analogRead(A1);
           velocity = analogRead(A0);
           // Mapeia o valor do potenciômetro de 0-1023 para os ângulos de 0-180 
-          velocity = map(velocity, 100, 1000, 1, 25);
-          throttle = map(throttle, 0, 1023, 1, 25);
+          velocity = map(velocity, 100, 1000, 30, 150);
+          throttle = map(throttle, 0, 1023, 30, 150);
           velocityMedia += velocity;
           throttleMedia += throttle;
       }
@@ -98,9 +210,9 @@
         // Define a velocidade
         pwm = throttle;
       }
-  
-      // Define a posição do ângulo do servo
-      pwmWrite(pinServo, pwm);
+  */
+      if ((throttle < 90) && (throttle > 30))
+            pwmWrite(pinServo, throttle);
   
       delay(100);  
   

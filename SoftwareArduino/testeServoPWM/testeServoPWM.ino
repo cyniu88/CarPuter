@@ -2,7 +2,7 @@
 
 int pos = 0;
 int servo = 9;
-int32_t frequency = 35;
+int32_t frequency = 50;
 bool success = false;
 int pot = 0;
 
