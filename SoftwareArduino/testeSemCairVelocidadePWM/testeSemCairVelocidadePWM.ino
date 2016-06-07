@@ -2,7 +2,7 @@
 // Pot=175  ==>  Servo=147
 // Pot=060  ==>  Servo=20
 
-  #include <Servo.h> 
+  #include <PWM.h> 
   #include <SoftwareSerial.h>
   
   #define LED 13
@@ -27,10 +27,12 @@
   int lastSensor = 0, throttle = 0, throttleMedia = 0;
   int countInteractions = 0, count = 0;
   boolean flagBreak = true, flagPID = false, goingUp = true, flagLight = false, flagAtivaPID = false;
-  
-  Servo myServo;  // Cria a entidade que controla o servo
-  
+  int32_t frequency = 150;
+  bool success = false;
+  int pinServo = 3;
   void setup() {
+    InitTimersSafe();
+      success = SetPinFrequencySafe(pinServo, frequency);
     // Define o LED como saída
     pinMode(LED, OUTPUT);  
     // Inicializa as entidades seriais com a mesma velocidade de comunicação
@@ -40,13 +42,14 @@
     //mySerial.flush(); 
     Serial.flush();
     // Define o pino 9 para o PWM(?) do servo
-    myServo.attach(3); 
+
     // Inicializa a váriavel de tempo
     lastProcess = millis(); 
   
   }
   
   void loop() {  
+  if (success) {
     // Lê o valor do potenciômetro usando a média das leituras para evitar ruídos
     velocityMedia = throttleMedia = 0;
 
@@ -98,7 +101,7 @@
     }
 
     // Define a posição do ângulo do servo
-    myServo.write(pwm);
+    pwmWrite(pinServo, pwm);
 
     delay(1);  
 
@@ -128,6 +131,7 @@
     Serial.print("\t");
     Serial.println();
   }
+}
 
 
   void IA() {    
