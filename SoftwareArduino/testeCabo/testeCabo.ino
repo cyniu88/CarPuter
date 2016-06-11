@@ -1,9 +1,11 @@
+// Pot=175  ==>  Servo=147
+// Pot=060  ==>  Servo=20
+
 #include <SoftwareSerial.h>
-#include <Servo.h>
 
 #define RxD 7                    // Pino do Arduino conectado no Tx do HC-05
 #define TxD 8                    // Pino do Arduino conectado no Rx do HC-05
-#define servoPin 3               // Pino do Arduino conectado no sinal do servo
+#define servoPin 9               // Pino do Arduino conectado no sinal do servo
 #define Reset 10                 // Pino do Arduino conectado no Reset do HC-05 (reset com LOW)
 #define PIO11 A2                 // Pino do Arduino conectado no PI011 do HC-05 (entrar no AT Mode com HIGH)
 #define BT_CMD_RETRIES 5         // Número de tentativas para cada comando AT do Bluetooth no caso de não responder OK
@@ -11,14 +13,10 @@
 #define RPM_CMD_RETRIES 5        // Número de tentativas para o comando de obter RPM
 #define THROTTLE_CMD_RETRIES 5   // Número de tentativas para o comando de obter o THROTTLE
 
-Servo myServo;
-
 boolean parear = false;
 String check = "";
 char c;
 int flag = 0;
-int32_t frequency = 150;
-bool success = false;
 
 boolean bt_error_flag;           // Váriavel para o erro de comunicação com o Bluetooth
 boolean obd_error_flag;          // Váriavel para o erro de comunicação com o ELM-327
@@ -378,8 +376,6 @@ void setup() {
    // Limpa os dados que estiverem na serial do Bluetooth
    blueToothSerial.flush();
 
-   myServo.attach(servoPin);
-
    while (1) {
 
       if (Serial.available()) {  
@@ -428,12 +424,8 @@ void loop(){
    // Funções para testar com o carro
    throttle_calc();
    delay(300);
-   throttle = map(throttle, 30, 100, 30, 170);
-   //rpm_calc();
-   //delay(300);
-   if ((throttle < 150) && (throttle > 30)) {
-      myServo.write(throttle);
-   }
+   rpm_calc();
+   delay(300);
    Serial.print(throttle);
    Serial.print("\t");
    Serial.print(rpm);
