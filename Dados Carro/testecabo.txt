@@ -1,0 +1,573 @@
+[SEND] sair
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+0	0
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+0	0
+bufin tr: 
+0111411121�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+13	0
+bufin tr: 
+011141114E�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+31	0
+bufin tr: 
+011141111E�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+12	0
+bufin tr: 
+0111411124�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+14	0
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+0	0
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+0	0
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+0	0
+bufin tr: 
+0111411138�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+22	0
+bufin tr: 
+011141111E�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+12	0
+bufin tr: 
+0111411166�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+40	0
+bufin tr: 
+01114111BF�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+75	0
+bufin tr: 
+0111411165�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+40	0
+bufin tr: 
+0111411173�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+45	0
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+0	0
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+0	0
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C0000�B��^
+valid rpm: 
+1
+0	0
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1464�B��^
+valid rpm: 
+1
+0	1305
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C13CC�B��^
+valid rpm: 
+1
+0	1267
+bufin tr: 
+0111411143�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C37F4�B��^
+valid rpm: 
+1
+26	3581
+bufin tr: 
+0111411120�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C351C�B��^
+valid rpm: 
+1
+13	3399
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C2BB0�B��^
+valid rpm: 
+1
+0	2796
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1D7C�B��^
+valid rpm: 
+1
+0	1887
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C17A4�B��^
+valid rpm: 
+1
+0	1513
+bufin tr: 
+0111411101�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1764�B��^
+valid rpm: 
+1
+0	1497
+bufin tr: 
+0111411114�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C2538�B��^
+valid rpm: 
+1
+8	2382
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1C24�B��^
+valid rpm: 
+1
+0	1801
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1174�B��^
+valid rpm: 
+1
+0	1117
+bufin tr: 
+0111411104�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1424�B��^
+valid rpm: 
+1
+2	1289
+bufin tr: 
+011141110F�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1BE8�B��^
+valid rpm: 
+1
+6	1786
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1198�B��^
+valid rpm: 
+1
+0	1126
+bufin tr: 
+0111411118�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1D70�B��^
+valid rpm: 
+1
+9	1884
+bufin tr: 
+0111411114�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1FF4�B��^
+valid rpm: 
+1
+8	2045
+bufin tr: 
+011141110D�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1E60�B��^
+valid rpm: 
+1
+5	1944
+bufin tr: 
+0111411100�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C1558�B��^
+valid rpm: 
+1
+0	1366
+bufin tr: 
+011141110E�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C253C�B��^
+valid rpm: 
+1
+5	2383
+bufin tr: 
+0111411140�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C3BD4�B��^
+valid rpm: 
+1
+25	3829
+bufin tr: 
+0111411130�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C37E8�B��^
+valid rpm: 
+1
+19	3578
+bufin tr: 
+0111411132�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C34CC�B��^
+valid rpm: 
+1
+20	3379
+bufin tr: 
+0111411116�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C2EC8�B��^
+valid rpm: 
+1
+9	2994
+bufin tr: 
+011141111C�BA�AVR �^
+valid tr: 
+1
+bufin rpm: 
+010C1410C2F2C�B��^
+valid rpm: 
+1
+11	3019
+bufin tr: 
+>�
+valid tr: 
+0
+bufin rpm: 
+0111411119>G�B��^
+valid rpm: 
+0
+0	0
+bufin tr: 
+010C1410C2D�BA�AVR �^
+valid tr: 
+0
+bufin rpm: 
+0111411100>��B��^
+valid rpm: 
+0
+0	0
+bufin tr: 
+010C1410C1F�BA�AVR �^
+valid tr: 
+0
+bufin rpm: 
+0111411100>p�B��^
+valid rpm: 
+0
+0	0
+bufin tr: 
+010C1410C12�BA�AVR �^
+valid tr: 
+0
+bufin rpm: 
+0111411100>X�B��^
+valid rpm: 
+0
+0	0
+bufin tr: 
+010C1410C12�BA�AVR �^
+valid tr: 
+0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
+0	0
