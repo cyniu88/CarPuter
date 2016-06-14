@@ -1,8 +1,4 @@
-// https://en.wikipedia.org/wiki/PID_controller
-// Pot=175  ==>  Servo=147
-// Pot=060  ==>  Servo=20
-
-  #include <Servo.h> 
+  #include <PWM.h> 
   #include <SoftwareSerial.h>
   
   #define LASTERRORINI 100000
@@ -13,6 +9,7 @@
   #define SUMMAX 5
   #define TOL 2
   #define TOLKI 15
+  
 
   float lastProcess = 0;
   float lastError = LASTERRORINI;
@@ -22,18 +19,18 @@
   int targetAcel = 70, lasttargetAcel = 70, pwm = 0; 
   int throttle = 0, throttleMedia = 0;
   boolean flagBreak = true;
+  int32_t frequency = 50;
+  bool success = false;
   
-  Servo myServo;  // Cria a entidade que controla o servo
-  
+
   void setup() {
-      // Inicializa as entidades seriais com a mesma velocidade de comunicação
+      InitTimersSafe();      
+      // Inicializa serial
       Serial.begin(38400);    
-      //mySerial.begin(38400);
-      // Limpa qualquer dado que estiver nas seriais
-      //mySerial.flush(); 
+      // Limpa qualquer dado que estiver na serial
       Serial.flush();
-      // Define o pino 9 para o PWM(?) do servo
-      myServo.attach(9); 
+      // Define o pino 9 para o PWM do servo
+      success = SetPinFrequencySafe(9, frequency); 
       // Inicializa a váriavel de tempo
       lastProcess = millis(); 
   
@@ -87,7 +84,7 @@
       pwm = (int)servo;
 
       // Define a posição do ângulo do servo
-      myServo.write(pwm);                  
+      pwmWrite(9, pwm);                  
 
       delay(1);  
   

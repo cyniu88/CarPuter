@@ -1,13 +1,6 @@
-// https://en.wikipedia.org/wiki/PID_controller
-// Pot=175  ==>  Servo=147
-// Pot=060  ==>  Servo=20
-
-  #include <Servo.h> 
+  #include <PWM.h> 
   #include <SoftwareSerial.h>
 
-  //SoftwareSerial mySerial(7, 8); // Cria a entidade serial para controlar o arduino nas portas 7 e 8 (RX, TX)
-  Servo myServo;  // Cria a entidade que controla o servo
-  
   float lastProcess = 0;
   float lastError = 100000;
   float kp = 0.50, ki = 0.0, kd = 0.0, kf = 0.5;
@@ -19,16 +12,17 @@
   int tolKi = 50, sumMax = 10;
   float Freio = 0, Delta = 0, sum = 0;
   int taxaDelay = 1;
+  int32_t frequency = 50;
+  bool success = false;
   
   void setup() {
-      // Inicializa as entidades seriais com a mesma velocidade de comunicação
+      InitTimersSafe();      
+      // Inicializa serial
       Serial.begin(38400);    
-      //mySerial.begin(38400);
-      // Limpa qualquer dado que estiver nas seriais
-      //mySerial.flush(); 
+      // Limpa qualquer dado que estiver na serial
       Serial.flush();
-      // Define o pino 9 para o PWM(?) do servo
-      myServo.attach(9); 
+      // Define o pino 9 para o PWM do servo
+      success = SetPinFrequencySafe(9, frequency); 
       // Inicializa a váriavel de tempo
       lastProcess = millis(); 
   
@@ -80,10 +74,9 @@
       */
 
       // Ajusta o valor do PID para o delay atual
-      pwm = (int)servo;// * taxaDelay;
-//pwm = 145;
+      pwm = (int)servo;
       // Define a posição do ângulo do servo
-      myServo.write(pwm);                  
+      pwmWrite(9, pwm);                  
 
       delay(50 * taxaDelay);  
   

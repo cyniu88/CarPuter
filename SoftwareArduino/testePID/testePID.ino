@@ -1,145 +1,248 @@
-// Pot=175  ==>  Servo=147
-// Pot=060  ==>  Servo=20
-
-  #include <Servo.h> 
   #include <SoftwareSerial.h>
-
-  //SoftwareSerial mySerial(7, 8); // Cria a entidade serial para controlar o arduino nas portas 7 e 8 (RX, TX)
-  Servo myServo;  // Cria a entidade que controla o servo
+  #include <Timer.h>
   
-  float lastProcess = 0;
-  float lastError = 100000;
-  float kp = 1.50, ki = 0.0, kd = 0.0;
-  float servo = 55, pid;
-  int targetAcel = 70; 
-  int throttle = 0, throttleMedia = 0;
-  int pwm = 0;
-  int tol = 1;
-  int tolKi = 50, sumMax = 10;
-  float Delta = 0, sum = 0;
-  int taxaDelay = 5;
+  #define R 2
+  #define PWM 3
+  #define L 4 
+  #define MIN 40
+  #define SETTOL 10
+
+  float ontem = millis();
+  
+  int i, j, posicaoCabo = 0;
+  int tolerancia = 0, toleranciaki = 20;
+  int targetAceleracao = 500, targetVelocidade = 50;
+  float soma = 0, FposicaoCabo = 0, lastError = 0;  
+  float kc = 0.2, ki = 0.05, kd = 0;
+  
+  Timer t;
+  SoftwareSerial mySerial(7, 8); // RX, TX
+  
+  String check = "";
+  char c;
+  int flag = 0, sair = 0;
+  unsigned int throttle;
   
   void setup() {
-      // Inicializa as entidades seriais com a mesma velocidade de comunicação
-      Serial.begin(38400);    
-      //mySerial.begin(38400);
-      // Limpa qualquer dado que estiver nas seriais
-      //mySerial.flush(); 
-      Serial.flush();
-      // Define o pino 9 para o PWM(?) do servo
-      myServo.attach(9); 
-      // Inicializa a váriavel de tempo
-      lastProcess = millis(); 
+      Serial.begin(38400);
+      pinMode(R, OUTPUT);
+      pinMode(L, OUTPUT);
+      pinMode(PWM, OUTPUT); 
+      
+      t.every(300, getThrottle);      
+    
+      mySerial.begin(38400);
+      delay(800);
+      mySerial.flush(); 
+      Serial.flush(); 
   
+      while (1) {
+          if (mySerial.available())
+          {  
+              delay(100);  
+              //transfere o buffer do mySerial para a string check
+              while (mySerial.available() > 0)  
+              {
+                  c = mySerial.read();
+                  check += c;
+                  flag = 1;
+              }
+              if(flag==1) {
+                  Serial.print(check);
+                  Serial.write("\n");
+                  throttle_calc();
+                  check.remove(0);
+                  flag = 0;
+              }
+          }
+      
+          if (Serial.available()) {  
+              delay(100);  
+              while (Serial.available() > 0)  //transfere o buffer do mySerial para a string check
+              {
+                  c = Serial.read();
+                  check += c;
+                  flag = 1;
+              }
+          
+              if(flag==1) {
+                  if (check == "sair") {
+                      mySerial.write("0111\r\n");
+                      check.remove(0);
+                      mySerial.flush();
+                      break;
+                  }
+                  
+                  Serial.print(check);
+                  Serial.write("\n");
+                  mySerial.flush();
+                  check += "\r\n";
+                  mySerial.print(check);
+                  check.remove(0);
+                  flag = 0;
+              }
+          }
+      }
   }
   
   void loop() {  
-      // Lê o valor alvo da serial
+  //media dos valores obtidos pra diminuir o ruido
+      FposicaoCabo = analogRead(A0);
+      for (i = 0; i < 50; i++) {    
+          for (j = 0; j < 10; j++) {
+              FposicaoCabo += analogRead(A0);
+          }
+          FposicaoCabo = FposicaoCabo/11;
+      }
+      posicaoCabo = (int)(FposicaoCabo);
+      
       if (Serial.available() > 0) {
           delay(10);
-          targetAcel = (Serial.read() - '0') * 100 + (Serial.read() - '0') * 10 + (Serial.read() - '0');
+          targetVelocidade = (Serial.read() - '0') * 100 + (Serial.read() - '0') * 10 + (Serial.read() - '0');
           
-          if (targetAcel < 0) 
-              targetAcel = 0;
+          if (targetVelocidade < 20) 
+              targetVelocidade = 20;
               
-          if (targetAcel > 180) 
-              targetAcel = 180;      
+          if (targetVelocidade > 80) 
+              targetVelocidade = 80;      
       }
   
-      //getThrottle();  
-      // Lê o valor do potenciômetro
-      throttleMedia = 0;
-      for(int k=0;k<100;k++)  { 
-          throttle = analogRead(A0);
-          // Mapeia o valor do potenciômetro de 0-1023 para os ângulos de 0-180 
-          throttle = map(throttle, 0, 1023, 0, 179); 
-          throttleMedia += throttle;
-      }  
-      throttle = throttleMedia / 100.0;
-
-      // Soma o valor do ângulo atual do servo com a correção do PID
-      pid = PID();
-      servo += pid;
-      if (servo > 167) servo = 167;
-      if (servo < 35) servo = 35;
-
-
-
-      // Zera a soma dos erros integrativos do PID caso a leitura do potenciômetro esteja fora da tolerância
-      if ((throttle > (targetAcel + tolKi)) || (throttle < (targetAcel - tolKi))) sum = 0;
-  
-      // Define um intervalo máximo para a soma dos erros integrativos
-      if (sum > sumMax) sum = sumMax;
-      if (sum < -sumMax) sum = -sumMax;
+      int vel = (int)PID();
       
-      /*
-      // Tenta recuperar a comunicação Bluetooth aumentando o delay
-      if (throttle != -1) taxaDelay = 5;      
-      else taxaDelay = 6;
-      */
-
-      // Ajusta o valor do PID para o delay atual
-      pwm = (int)servo;// * taxaDelay;
-//pwm = 145;
-      // Define a posição do ângulo do servo
-      myServo.write(pwm);                  
-
-      delay(50 * taxaDelay);  
+      t.update();
+      
+      if ((posicaoCabo > (targetAceleracao+toleranciaki)) || (posicaoCabo < (targetAceleracao-toleranciaki))) {
+          soma = 0;
+      }
   
-// Debugging...  
-
-      //Serial.print("   targetAcel: ");
-      Serial.print(targetAcel);
-      Serial.print("\t");
-      //Serial.print("   throttle: ");
-      Serial.print(throttle);
-      Serial.print("\t");
-      Serial.print(pid);
-      Serial.print("\t");
-      Serial.print(pwm);
-      Serial.print("\t");
-      Serial.print(sum);
-      Serial.print("\t");
-      Serial.print(Delta);
-      Serial.print("\t");
+      if (soma > 10) 
+          soma = 10;
+      if (soma < -10) 
+          soma = -10;
+      
+      if (posicaoCabo < targetAceleracao-tolerancia) {
+          //somando o valor do vel com o MIN para ele rodar, caso seja menor q MIN
+          vel=vel+MIN;
+          Serial.print(" R ");
+          Serial.print(vel);
+          
+          digitalWrite(L, HIGH);
+          digitalWrite(R, LOW);
+          analogWrite(PWM, vel);
+      
+      } else if (posicaoCabo > targetAceleracao+tolerancia) {
+          //como o vel fica negativo, subtraimos o MIN pra aumentar o valor negativo
+          vel = vel-MIN;
+          Serial.print(" L ");
+          Serial.print(vel);
+          
+          digitalWrite(R, HIGH);
+          digitalWrite(L, LOW);
+          //multiplicamos por -1 pois o pwm precisa ser positivo
+          analogWrite(PWM, -1*vel);
+          //tolerancia para manter estabilizado em uma certa faixa
+          
+      } else {    
+          digitalWrite(PWM, 0);
+      }
+  
+      if (posicaoCabo == targetAceleracao)
+          tolerancia = SETTOL; 
+      
+      if ((posicaoCabo > targetAceleracao +tolerancia) || (posicaoCabo < targetAceleracao - tolerancia))
+          tolerancia = 0;
+      
       Serial.println();
   }
-
-
+  
   float PID() {
-      float P, I, D, myPID, dt, error;
-    
-      // Cáculo do erro associado as medições
-      error = targetAcel - throttle;
-
-      // Cálculo do delta de tempo
-      dt = (millis() - lastProcess) / 1000.0;
-
-      // Cálculo da componente proporcional
-      P = kp * error;
-
-      // Cálculo da componente integrativa
-      sum += (error * dt);
-      I = ki * sum;
-
-      // Cálculo da componente derivativa
-      if ((dt > 0)&&(lastError!=100000))  {
-        Delta = ((error - lastError) / dt);
-        D = kd * Delta;
-      }
-      else 
-        D = 0;
+      float error, integral, proportional, derivative, dt;
       
-      // Atualização dos valores do último erro e tempo
+      dt = (millis() - ontem)/1000;
+      ontem  = millis();
+      
+      error = targetAceleracao-posicaoCabo;
+      soma = soma + (error * dt);
+      
+      proportional = error * kc;  
+      integral = ki * soma;
+      derivative = kd * ((error - lastError)/dt);
+      
       lastError = error;
-      lastProcess  = millis();
-
-      // Resultado do PID
-      myPID = P + I + D;
       
-      //Serial.print(myPID);
-      //Serial.println();
+      return proportional + integral + derivative;
+  }
+  
+  float ajuste() {
+      if(throttle < targetVelocidade-1) {
+          if (targetAceleracao > 20) 
+              targetAceleracao = targetAceleracao - 10;
+      }
+      else if(throttle > targetVelocidade+1) { 
+          if (targetAceleracao < 980) 
+              targetAceleracao = targetAceleracao + 10;
+      }   
+  }
+  
+  //THROTTLE LOAD
+  void throttle_calc(){
+      boolean valid;  
+     
+      valid=false;
       
-      return myPID;
+      if ((check[5]=='4') && (check[6]=='1') && (check[8]=='1') && (check[9]=='1')){ 
+          valid=true;
+      } else {
+          valid=false;
+      }
+      
+      if (valid){
+          String loadHex(check[11]); 
+          String loadHex2(check[12]); 
+          
+          String loadHexTotal=loadHex+loadHex2;
+          int DecimalDecode=hexToDec(loadHexTotal);
+          throttle=round((float(DecimalDecode)/255)*100); //Arredonda e devolve valor final
+      }   
+  
+  }
+  
+  unsigned int hexToDec(String hexString) {  
+      unsigned int decValue = 0;
+      int nextInt;
+      
+      for (int i = 0; i < hexString.length(); i++) {      
+          nextInt = int(hexString.charAt(i));
+          if (nextInt >= 48 && nextInt <= 57) 
+              nextInt = map(nextInt, 48, 57, 0, 9);
+          if (nextInt >= 65 && nextInt <= 70) 
+              nextInt = map(nextInt, 65, 70, 10, 15);
+          if (nextInt >= 97 && nextInt <= 102) 
+              nextInt = map(nextInt, 97, 102, 10, 15);
+              
+          nextInt = constrain(nextInt, 0, 15);          
+          decValue = (decValue * 16) + nextInt;
+      }
+      
+      return decValue;
+  }
+  
+  
+  void getThrottle() {  
+      while (mySerial.available() > 0)
+      {
+          c = mySerial.read();
+          check += c;
+          flag = 1;
+      }
+      
+      if(flag==1) {
+          throttle_calc();
+          ajuste();
+          check.remove(0);
+          mySerial.flush(); 
+          mySerial.write("0111\r\n");
+          flag = 0;
+      }
   }
 

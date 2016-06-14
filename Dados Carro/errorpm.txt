@@ -1,211 +1,0 @@
-[SEND] sair
-check tr
-
-check tr resp
-
-0	0
-check rpm
-ATSP50111OK>BUS INIT: OK
-check rpm resp
-ATSP50111OK>BUS INIT: OK
-0	0
-check tr
-41 11 00 >010C41 0C 00 00 
-check tr resp
-41 11 00 >010C41 0C 00 00 
-0	0
-check rpm
->011141 11 00 >
-check rpm resp
->011141 11 00 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 3B >
-check rpm resp
-011141 11 3B >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 07 >
-check rpm resp
-011141 11 07 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 80 >
-check rpm resp
-011141 11 80 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 70 >
-check rpm resp
-011141 11 70 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 5E >
-check rpm resp
-011141 11 5E >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 8E >
-check rpm resp
-011141 11 8E >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 9E >
-check rpm resp
-011141 11 9E >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 9D >
-check rpm resp
-011141 11 9D >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 7D >
-check rpm resp
-011141 11 7D >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 23 >
-check rpm resp
-011141 11 23 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 AC >
-check rpm resp
-011141 11 AC >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 70 >
-check rpm resp
-011141 11 70 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 97 >
-check rpm resp
-011141 11 97 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 C0 >
-check rpm resp
-011141 11 C0 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 BB >
-check rpm resp
-011141 11 BB >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 B9 >
-check rpm resp
-011141 11 B9 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 C2 >
-check rpm resp
-011141 11 C2 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 C5 >
-check rpm resp
-011141 11 C5 >
-0	0
-check tr
-010C41 0C 00 00 >
-check tr resp
-010C41 0C 00 00 >
-0	0
-check rpm
-011141 11 C5 >
-check rpm resp
-011141 11 C5 >
-0	0
